@@ -1,0 +1,36 @@
+# Виртуальные окружения
+venv/
+env/
+.venv/
+.env/
+
+# PyTorch и большие бинарные файлы
+*.dll
+*.so
+*.lib
+*.a
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# IDE
+.vscode/
+.idea/
+
+# Данные и модели
+data/
+models/
+*.pth
+*.pt
+*.bin
+
+# Логи
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
