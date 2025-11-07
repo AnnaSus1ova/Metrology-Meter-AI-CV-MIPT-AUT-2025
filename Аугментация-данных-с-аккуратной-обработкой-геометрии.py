@@ -22,7 +22,7 @@ class GeometryPreservingAugmentation:
             return None
     
     def precise_phone_detection(self, image):
-        """Точное обнаружение телефона с сохранением геометрии"""
+        """Точное обнаружение телефона"""
         height, width = image.shape[:2]
         
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
@@ -334,7 +334,7 @@ class GeometryPreservingAugmentation:
         return generated_count
 
 def mass_geometry_preserving_augmentation(input_dir, output_dir, samples_per_image=20):
-    """Массовая аугментация с сохранением геометрии"""
+    """Массовая аугментация"""
     aug = GeometryPreservingAugmentation(output_size=(1024, 1024))
     aug.input_dir = input_dir
     
@@ -381,4 +381,5 @@ if __name__ == "__main__":
         print(f"Папка {INPUT_DIR} не найдена!")
         print("Создайте папку с исходными изображениями или укажите правильный путь.")
     else:
+
         mass_geometry_preserving_augmentation(INPUT_DIR, OUTPUT_DIR, SAMPLES_PER_IMAGE)
