@@ -37,7 +37,7 @@ class FastDistanceTrainingAugmentation:
         ])
         
     def load_image_fast(self, image_path):
-        """Быстрая загрузка изображения"""
+        """Загрузка изображения"""
         try:
             image = cv2.imread(image_path, cv2.IMREAD_REDUCED_COLOR_2)  
             if image is None:
@@ -48,7 +48,7 @@ class FastDistanceTrainingAugmentation:
             return None, None
     
     def extract_phone_region_fast(self, image):
-        """Быстрое извлечение области телефона"""
+        """Извлечение области телефона"""
         height, width = image.shape[:2]
         
         small_image = cv2.resize(image, (width//2, height//2))
@@ -117,39 +117,8 @@ class FastDistanceTrainingAugmentation:
             print(f"Ошибка в вариации {i}: {e}")
             return False
 
-    def generate_distance_preserving_variations_fast(self, image_path, output_dir, num_variations=10):
-        """Быстрая генерация вариантов"""
-        print(f"Обрабатывается: {image_path}")
-        start_time = time.time()
-        
-        original_image, original_size = self.load_image_fast(image_path)
-        if original_image is None:
-            return 0
-        
-        phone_region, bbox, contour = self.extract_phone_region_fast(original_image)
-        if phone_region is None or phone_region.size == 0:
-            return 0
-        
-        rel_path = os.path.relpath(os.path.dirname(image_path), self.input_dir)
-        output_subdir = os.path.join(output_dir, rel_path)
-        os.makedirs(output_subdir, exist_ok=True)
-        
-        args_list = [
-            (i, original_image, bbox, original_size, image_path, output_subdir) 
-            for i in range(num_variations)
-        ]
-        
-        with Pool(processes=min(cpu_count(), num_variations)) as pool:
-            results = pool.map(self.process_single_variation, args_list)
-        
-        generated_count = sum(results)
-        
-        end_time = time.time()
-        print(f"Создано {generated_count} вариантов за {end_time - start_time:.2f} сек")
-        return generated_count
-
     def generate_distance_preserving_variations_batch(self, image_path, output_dir, num_variations=10):
-        """Пакетная генерация (альтернативный метод)"""
+        """Пакетная генерация"""
         print(f"Быстрая обработка: {image_path}")
         start_time = time.time()
         
@@ -215,7 +184,7 @@ def process_single_image(args):
     return count
 
 def create_distance_training_dataset_fast(input_dir, output_dir, samples_per_image=10, use_parallel=True):
-    """Создание датасета с максимальной скоростью"""
+    """Создание датасета"""
     start_time = time.time()
     
     if not os.path.exists(output_dir):
@@ -269,9 +238,6 @@ def create_distance_training_dataset_fast(input_dir, output_dir, samples_per_ima
         "total_images": len(all_images),
         "total_variations": total_generated,
         "samples_per_image": samples_per_image,
-        "total_time_seconds": total_time,
-        "time_per_image": total_time / len(all_images) if all_images else 0,
-        "variations_per_second": total_generated / total_time if total_time > 0 else 0
     }
     
     print(f"\nБЫСТРАЯ АУГМЕНТАЦИЯ ЗАВЕРШЕНА!")
